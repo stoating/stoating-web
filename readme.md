@@ -200,4 +200,4 @@ To get the project up and running in the development environment, you will need:
 - add roles
 - add websockets
 - server creation automation with terraform
-- server setup automation with ansible test
+- server setup automation with ansible
