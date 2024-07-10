@@ -1,0 +1,24 @@
+services:
+  app:
+    build:
+      context: .
+      args:
+        APP_PLATFORM: ${APP_PLATFORM}
+    tty: true
+    stdin_open: true
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - ${APP_APP_HOST_PORT}:${APP_APP_CONT_PORT}
+    depends_on:
+      - xtdb
+    command: ["bb", "startup-prod"]
+
+  xtdb:
+    image: ghcr.io/xtdb/xtdb-standalone-ea
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - ${APP_XTDB_HOST_PORT}:${APP_XTDB_CONT_PORT}

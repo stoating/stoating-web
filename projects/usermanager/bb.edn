@@ -1,0 +1,80 @@
+{:deps {}
+
+ :tasks
+ {:init (defn env [s] (System/getenv s))
+  :requires ([babashka.wait :as wait])
+  :enter (println "Entering:" (:name (current-task)))
+
+  set-git-config-name
+  {:doc "set the git user name"
+   :task (shell "git config --global user.name"
+                (env "APP_GITHUB_USER_NAME"))}
+
+  set-git-config-email
+  {:doc "set the git user email"
+   :task (shell "git config --global user.email"
+                (env "APP_GITHUB_USER_EMAIL"))}
+
+  web-start-tailwind
+  {:doc "init tailwind watcher for the web base"
+   :task (shell
+          {:dir "./bases/web/resources/tools/tailwind"}
+          (str "npx tailwindcss "
+               "-i tailwind.css "
+               "-o ../../public/css/tailwind_output.css "
+               "--watch"))}
+
+  -xtdb-container-id
+  {:doc "get the xtdb container id and save to a file"
+   :task (shell {:out "container_id.txt"}
+                (str "docker ps -a -q --filter "
+                     "ancestor=ghcr.io/xtdb/xtdb-standalone-ea "
+                     "--format=\"{{.ID}}\""))}
+
+  xtdb-container-stop
+  {:doc "stop the xtdb container"
+   :depends [-xtdb-container-id]
+   :task (shell
+          (str "docker stop " (slurp "container_id.txt")))}
+
+  xtdb-container-remove
+  {:doc "remove the xtdb container"
+   :depends [-xtdb-container-id xtdb-container-stop]
+   :task (shell
+          (str "docker rm " (slurp "container_id.txt")))}
+
+  xtdb-container-pull-run
+  {:doc "start the xtdb container. pull if missing"
+   :task (shell
+          (str "docker run "
+               "--pull=missing "
+               "-tip " (env "APP_XTDB_HOST_PORT") ":" (env "APP_XTDB_CONT_PORT") " "
+               "ghcr.io/xtdb/xtdb-standalone-ea"))}
+
+  print-env
+  {:doc "print the env vars"
+   :task (shell "printenv")}
+
+  startup-dev
+  {:doc "startup sequence for the web base"
+   :task (do (run 'print-env)
+             (run '-startup-parallel {:parallel true}))}
+
+  -startup-parallel {:depends [startup-parallel:git
+                               startup-parallel:tailwind
+                               startup-parallel:xtdb]}
+
+  startup-parallel:git
+  {:doc "set git env vars"
+   :task (do (run 'set-git-config-name)
+             (run 'set-git-config-email))}
+
+  startup-parallel:tailwind
+  {:doc "run start tailwind"
+   :task (run 'web-start-tailwind)}
+
+  startup-parallel:xtdb
+  {:doc "run start xtdb container"
+   :task (do (try (run 'xtdb-container-remove)
+                  (finally
+                    (run 'xtdb-container-pull-run))))}}}

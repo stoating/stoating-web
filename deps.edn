@@ -1,0 +1,41 @@
+{:mvn/repos {"ossrh-snapshots" {:url "https://s01.oss.sonatype.org/content/repositories/snapshots"}}
+
+ :deps {}
+
+ :aliases {:+clj {:extra-deps {org.clojure/clojure {:mvn/version "1.11.2"}}}
+
+           :+clj-storm {:classpath-overrides {org.clojure/clojure nil}
+                        :extra-deps {com.github.flow-storm/clojure        {:mvn/version "1.11.3-1"}
+                                     com.github.flow-storm/flow-storm-dbg {:mvn/version "3.15.5"}}
+                        :jvm-opts   ["-Dclojure.storm.instrumentEnable=true"
+                                     "-Dclojure.storm.instrumentOnlyPrefixes=routes,web,usermanager"]}
+
+           :+default {}
+
+           :dev  {:extra-paths ["development/src"]
+                  :extra-deps  {;; core components
+                                poly/db   {:local/root "components/database"}
+                                poly/log  {:local/root "components/log"}
+                                poly/time {:local/root "components/time"}
+
+                                ;; bases
+                                poly/web  {:local/root "bases/web"}
+
+                                ;; dev components
+                                poly/fw   {:local/root "components/filewatcher"}
+
+                                ;; dev other
+                                djblue/portal  {:mvn/version "0.55.1"}
+                                integrant/repl {:mvn/version "0.3.3"}}}
+
+           :test {:extra-paths ["bases/web/test"
+                                "components/database/test"
+                                "components/filewatcher/test"
+                                "components/log/test"
+                                "components/time/test"]
+                  :extra-deps  {com.xtdb/xtdb-core {:mvn/version "2.0.0-SNAPSHOT"}}
+                  :jvm-opts    ["--add-opens=java.base/java.nio=ALL-UNNAMED"
+                                "-Dio.netty.tryReflectionSetAccessible=true"]}
+
+           :poly {:main-opts   ["-m" "polylith.clj.core.poly-cli.core"]
+                  :extra-deps  {polylith/clj-poly {:mvn/version "0.2.19"}}}}}

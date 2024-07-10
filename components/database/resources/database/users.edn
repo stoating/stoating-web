@@ -1,0 +1,16 @@
+[{:first-name    "Sean"
+  :last-name     "Corfield"
+  :email         "sean@worldsingles.com"
+  :department-id 3}
+ {:first-name    "Steve"
+  :last-name     "McQueen"
+  :email         "kingofcool@gmail.com"
+  :department-id 2}
+ {:first-name    "Honk"
+  :last-name     "McHonkerton"
+  :email         "dooper.doopson@gdoop.com"
+  :department-id 1}
+ {:first-name    "Funky"
+  :last-name     "Kong"
+  :email         "kong.funky@surfsup.dk"
+  :department-id 3}]

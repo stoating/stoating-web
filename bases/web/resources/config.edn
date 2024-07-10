@@ -1,0 +1,10 @@
+{:app/server {:port #profile {:dev #long #env APP_APP_HOST_PORT
+                              :prod #long #env APP_APP_CONT_PORT}
+              :handler #ig/ref :app/app}
+
+ :app/app {:db #ig/ref :app/database
+           :state #include "state.edn"}
+
+ :app/database {:host-name #env APP_XTDB_HOST_NAME
+                :port #profile {:dev #long #env APP_XTDB_HOST_PORT
+                                :prod #long #env APP_XTDB_CONT_PORT}}}

@@ -1,0 +1,17 @@
+{:mvn/repos {"ossrh-snapshots" {:url "https://s01.oss.sonatype.org/content/repositories/snapshots"}}
+
+ :deps {;; components
+        poly/db   {:local/root "../../components/database"}
+        poly/log  {:local/root "../../components/log"}
+        poly/time {:local/root "../../components/time"}
+
+        ;; bases
+        poly/web  {:local/root "../../bases/web"}
+
+        org.clojure/clojure {:mvn/version "1.11.2"}}
+
+ :aliases {:test {:extra-paths ["test"]
+                  :extra-deps  {}}
+
+           :build {:replace-deps {io.github.clojure/tools.build {:mvn/version "0.10.0"}}
+                   :ns-default build}}}
