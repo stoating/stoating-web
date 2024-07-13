@@ -10,4 +10,5 @@
    :user-update                  "/user/update"
    :user-delete                  "/user/delete"
    :user-list                    "/user/list"
-   :user-form                    "/user/form"})
+   :user-form                    "/user/form"
+   :zachary-r-slade              "https://zacharyrslade.com"})

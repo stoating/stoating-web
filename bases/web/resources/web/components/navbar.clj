@@ -52,4 +52,8 @@
         :hx-trigger "click"
         :hx-target "#changes-id"
         :hx-swap "outerHTML"
-        :title "Resets change tracking"} "Reset"]])
+        :title "Resets change tracking"} "Reset"]
+   [:a {:class nav-a-css
+        :href (get rs/rs :zachary-r-slade)
+        :target "_blank"
+        :title "Zachary Slade"} "My Site"]])
